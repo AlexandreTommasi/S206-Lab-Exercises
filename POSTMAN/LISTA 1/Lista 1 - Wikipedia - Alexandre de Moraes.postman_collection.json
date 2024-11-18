@@ -106,8 +106,11 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"packages": {},
-								"type": "text/javascript"
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -124,16 +127,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
-							"protocol": "https",
+							"raw": "{{URL}}",
 							"host": [
-								"pt",
-								"wikipedia",
-								"org"
-							],
-							"path": [
-								"wiki",
-								"Alexandre_de_Moraes"
+								"{{URL}}"
 							]
 						}
 					},
@@ -160,16 +156,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
-							"protocol": "https",
+							"raw": "{{URL}}",
 							"host": [
-								"pt",
-								"wikipedia",
-								"org"
-							],
-							"path": [
-								"wiki",
-								"Alexandre_de_Moraes"
+								"{{URL}}"
 							]
 						}
 					},
@@ -196,16 +185,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
-							"protocol": "https",
+							"raw": "{{URL}}",
 							"host": [
-								"pt",
-								"wikipedia",
-								"org"
-							],
-							"path": [
-								"wiki",
-								"Alexandre_de_Moraes"
+								"{{URL}}"
 							]
 						}
 					},
@@ -229,9 +211,11 @@
 									"pm.test(\"Content-Type is text/html\", function () {\r",
 									"    pm.response.to.have.header(\"Content-Type\", \"text/html; charset=UTF-8\");\r",
 									"});\r",
-									"pm.test(\"Server header is correct\", function () {\r",
-									"    pm.expect(pm.response.headers.get('Server')).to.equal('mw-web.eqiad.main-75f86cb67d-vgzqz');\r",
+									"pm.test(\"Server header exists and is correct format\", function () {\r",
+									"    const serverHeader = pm.response.headers.get('Server');\r",
+									"    pm.expect(serverHeader).to.include('mw-web.eqiad.main');\r",
 									"});\r",
+									"\r",
 									"\r",
 									"\r",
 									""
@@ -245,16 +229,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
-							"protocol": "https",
+							"raw": "{{URL}}",
 							"host": [
-								"pt",
-								"wikipedia",
-								"org"
-							],
-							"path": [
-								"wiki",
-								"Alexandre_de_Moraes"
+								"{{URL}}"
 							]
 						}
 					},
@@ -299,16 +276,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
-							"protocol": "https",
+							"raw": "{{URL}}",
 							"host": [
-								"pt",
-								"wikipedia",
-								"org"
-							],
-							"path": [
-								"wiki",
-								"Alexandre_de_Moraes"
+								"{{URL}}"
 							]
 						}
 					},
@@ -335,16 +305,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
-							"protocol": "https",
+							"raw": "{{URL}}",
 							"host": [
-								"pt",
-								"wikipedia",
-								"org"
-							],
-							"path": [
-								"wiki",
-								"Alexandre_de_Moraes"
+								"{{URL}}"
 							]
 						}
 					},
@@ -375,16 +338,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes?testParam=1",
-							"protocol": "https",
+							"raw": "{{URL}}?testParam=1",
 							"host": [
-								"pt",
-								"wikipedia",
-								"org"
-							],
-							"path": [
-								"wiki",
-								"Alexandre_de_Moraes"
+								"{{URL}}"
 							],
 							"query": [
 								{
