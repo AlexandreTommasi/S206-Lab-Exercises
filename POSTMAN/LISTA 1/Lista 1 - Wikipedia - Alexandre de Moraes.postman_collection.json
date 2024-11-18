@@ -1,0 +1,402 @@
+{
+	"info": {
+		"_postman_id": "50f28721-8e98-42c2-82a6-bc2a24ba433a",
+		"name": "Lista 1 - Wikipedia - Alexandre de Moraes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39347276"
+	},
+	"item": [
+		{
+			"name": "Cenários Negativos",
+			"item": [
+				{
+					"name": "Página Inexistente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"// Carrega o HTML da resposta\r",
+									"const cheerio = require('cheerio');\r",
+									"const $ = cheerio.load(pm.response.text());\r",
+									"\r",
+									"\r",
+									"const pageTitle = $(\"title\").text();\r",
+									"pm.test(\"Page title indicates page does not exist\", function () {\r",
+									"    pm.expect(pageTitle).to.satisfy(function (title) {\r",
+									"        return title.includes(\"Not Found\") || title.includes(\"Título inválido\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const bodyText = $(\"body\").text();\r",
+									"pm.test(\"Body contains error message or is empty\", function () {\r",
+									"    pm.expect(bodyText.trim()).to.satisfy(function (text) {\r",
+									"        return text.includes(\"O título de página solicitado contém\") ||\r",
+									"               text.includes(\"Página inexistente\") ||\r",
+									"               text === \"\"; // Permite corpo vazio\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://pt.wikipedia.org/wi/Alexandre_De_Bolsonaro/123",
+							"protocol": "https",
+							"host": [
+								"pt",
+								"wikipedia",
+								"org"
+							],
+							"path": [
+								"wi",
+								"Alexandre_De_Bolsonaro",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Envio de Dados Inválidos com POST",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Status code is 200 or expected behavior\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 405]);\r",
+									"});\r",
+									"\r",
+									"// Carrega o HTML da resposta\r",
+									"const cheerio = require('cheerio');\r",
+									"const $ = cheerio.load(pm.response.text());\r",
+									"\r",
+									"\r",
+									"const pageTitle = $(\"title\").text();\r",
+									"pm.test(\"Page title indicates the request was handled\", function () {\r",
+									"    pm.expect(pageTitle).to.include(\"Alexandre de Moraes – Wikipédia\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const bodyText = $(\"body\").text();\r",
+									"pm.test(\"Body does not contain error message\", function () {\r",
+									"    pm.expect(bodyText).to.not.include(\"O título de página solicitado contém\");\r",
+									"    pm.expect(bodyText).to.not.include(\"Erro\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"test\": \"invalid\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
+							"protocol": "https",
+							"host": [
+								"pt",
+								"wikipedia",
+								"org"
+							],
+							"path": [
+								"wiki",
+								"Alexandre_de_Moraes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste de Segurança - Headers Sensíveis",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Server header is not exposed\", function () {\r",
+									"    pm.expect(pm.response.headers.has('X-Powered-By')).to.be.false;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
+							"protocol": "https",
+							"host": [
+								"pt",
+								"wikipedia",
+								"org"
+							],
+							"path": [
+								"wiki",
+								"Alexandre_de_Moraes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste de Restrições de Tamanho do Corpo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response size is less than 1MB\", function () {\r",
+									"    pm.expect(pm.response.size().total).to.be.below(1048576);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
+							"protocol": "https",
+							"host": [
+								"pt",
+								"wikipedia",
+								"org"
+							],
+							"path": [
+								"wiki",
+								"Alexandre_de_Moraes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cenários Positivos",
+			"item": [
+				{
+					"name": "Verificação Completa de Disponibilidade e Cabeçalhos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Content-Type is text/html\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"text/html; charset=UTF-8\");\r",
+									"});\r",
+									"pm.test(\"Server header is correct\", function () {\r",
+									"    pm.expect(pm.response.headers.get('Server')).to.equal('mw-web.eqiad.main-75f86cb67d-vgzqz');\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
+							"protocol": "https",
+							"host": [
+								"pt",
+								"wikipedia",
+								"org"
+							],
+							"path": [
+								"wiki",
+								"Alexandre_de_Moraes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validação de Conteúdo Específico na Página",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Carrega o HTML da resposta\r",
+									"const cheerio = require('cheerio');\r",
+									"const $ = cheerio.load(pm.response.text());\r",
+									"\r",
+									"\r",
+									"const pageTitle = $(\"title\").text();\r",
+									"pm.test(\"Page title contains 'Alexandre de Moraes'\", function () {\r",
+									"    pm.expect(pageTitle).to.include(\"Alexandre de Moraes – Wikipédia\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const bodyText = $(\"body\").text();\r",
+									"pm.test(\"Body contains relevant content\", function () {\r",
+									"    pm.expect(bodyText).to.include(\"Alexandre de Moraes\");\r",
+									"    pm.expect(bodyText).to.include(\"jurista\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
+							"protocol": "https",
+							"host": [
+								"pt",
+								"wikipedia",
+								"org"
+							],
+							"path": [
+								"wiki",
+								"Alexandre_de_Moraes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste de Performance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 500ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes",
+							"protocol": "https",
+							"host": [
+								"pt",
+								"wikipedia",
+								"org"
+							],
+							"path": [
+								"wiki",
+								"Alexandre_de_Moraes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste de Redirecionamento (com query string)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 for redirected URL\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Query string is ignored by the server\", function () {\r",
+									"    var html = pm.response.text();\r",
+									"    pm.expect(html).to.include(\"Alexandre de Moraes\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://pt.wikipedia.org/wiki/Alexandre_de_Moraes?testParam=1",
+							"protocol": "https",
+							"host": [
+								"pt",
+								"wikipedia",
+								"org"
+							],
+							"path": [
+								"wiki",
+								"Alexandre_de_Moraes"
+							],
+							"query": [
+								{
+									"key": "testParam",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
